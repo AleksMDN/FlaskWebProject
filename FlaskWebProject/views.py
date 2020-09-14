@@ -1,7 +1,7 @@
 """
 Routes and views for the flask application.
 """
-
+from vsearch import search4letters
 from datetime import datetime
 from flask import render_template
 from FlaskWebProject import app
@@ -35,3 +35,13 @@ def about():
         year=datetime.now().year,
         message='Your application description page.'
     )
+
+@app.route('/search4')
+def search4() -> str:
+    """Renders the results of a call to 'search4letters' to the browser."""
+    return render_template(
+       'search4.html',
+       title='Result4Search',
+       year=datetime.now().year,
+       message=str(search4letters('life, the universe, and everything', 'xyz'))
+       )
