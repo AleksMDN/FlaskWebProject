@@ -3,7 +3,7 @@ Routes and views for the flask application.
 """
 from vsearch import search4letters
 from datetime import datetime
-from flask import render_template
+from flask import render_template, request
 from FlaskWebProject import app
 
 @app.route('/')
@@ -36,12 +36,25 @@ def about():
         message='Your application description page.'
     )
 
-@app.route('/search4')
-def search4() -> str:
-    """Renders the results of a call to 'search4letters' to the browser."""
+@app.route('/results', methods=['POST'])
+def do_search() -> 'html':
+    phrase = request.form['phrase']
+    letters = request.form['letters']
+    title = 'Here are your results:'
+    results = str(search4letters(phrase, letters))
+    return render_template('results.html',
+                           title='Here are your results:',
+                           the_phrase=phrase,
+                           the_letters=letters,
+                           the_results=results,
+                           year=datetime.now().year
+     )
+
+@app.route('/entry')
+def entry():
+    """Renders the home page."""
     return render_template(
-       'search4.html',
-       title='Result4Search',
-       year=datetime.now().year,
-       message=str(search4letters('life, the universe, and everything', 'xyz'))
-       )
+        'entry.html',
+        title='Welcome to search4letters on the web!',
+        year=datetime.now().year
+    )
